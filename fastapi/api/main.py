@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .routers import auth
+from .routers import auth, todos
 from .database import Base, engine
 
 app = FastAPI()
@@ -23,3 +23,4 @@ def health_check():
     return 'Health Check Complete'
 
 app.include_router(auth.router)
+app.include_router(todos.router)

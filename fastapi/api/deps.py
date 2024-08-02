@@ -36,15 +36,16 @@ oauth_bearer_dependency = Annotated[str, Depends(oauth_bearer)]
 async def getCurrentUser(token: oauth_bearer_dependency):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username:str = payload.get('sub')
-        userId:int = payload.get('id')
+        print(f"Decoded Payload: {payload}")  # Debugging
+        username: str = payload.get('sub')
+        userId: int = payload.get('id')
         
-        # If unauthorize
         if username is None or userId is None:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not validated')
         return {'username': username, 'userId': userId}
     except JWTError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Could not validate user')
+
 
 user_dependency = Annotated[dict, Depends (getCurrentUser)]
          

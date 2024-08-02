@@ -43,9 +43,9 @@ def AuthenticateUser(username: str, password: str, db):
 
 def CreateAccessToken(username: str, userId: str, expiredDelta: timedelta):
     # Encode the token
-    encode = { 'sub' : username, 'id' : userId}
+    encode = {'sub': username, 'id': userId}
     expires = datetime.now(timezone.utc) + expiredDelta
-    encode.update({'expires' : expires.isoformat()})
+    encode.update({'expires': expires.isoformat()})
     
     return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
 

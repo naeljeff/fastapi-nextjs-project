@@ -3,11 +3,11 @@ from sqlalchemy.orm import relationship
 from .database import Base
 
 # Create association tables (table tengah yang ngegabungin 2 tabel lainnya)
-todo_details_association = Table(
-    'todo_details', Base.metadata,
-    Column('todo_details_id', Integer, ForeignKey('details.id')),
-    Column('todo_master_id', Integer, ForeignKey('todo.id'))
-)
+# todo_details_association = Table(
+#     'todo_details', Base.metadata,
+#     Column('todo_details_id', Integer, ForeignKey('details.id')),
+#     Column('todo_master_id', Integer, ForeignKey('todo.id'))
+# )
 
 # Class User -> For table user
 class User(Base):
@@ -24,14 +24,14 @@ class Todo(Base):
     user_id = Column(Integer, ForeignKey('users.id'))
     title = Column(String, index=True)
     description = Column(String, index=True)
-    details = relationship('Details', secondary=todo_details_association, back_populates='todos')
+    detail = relationship('Details', back_populates='todo', uselist=False)
     
 # Class Details -> For table details
 class Details(Base):
     __tablename__ = 'details'
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey('users.id'))
+    user_id = Column(Integer, ForeignKey('users.id'), unique=True)
     detail = Column(String, index=True)
-    todos = relationship('Todo', secondary=todo_details_association, back_populates='details')
+    todo = relationship('Todo', back_populates='detail')
     
 Todo.details = relationship('Details', secondary=todo_details_association, back_populates='todos')
