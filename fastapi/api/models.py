@@ -30,8 +30,6 @@ class Todo(Base):
 class Details(Base):
     __tablename__ = 'details'
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey('users.id'), unique=True)
+    todo_id = Column(Integer, ForeignKey('todo.id'), unique=True)
     detail = Column(String, index=True)
     todo = relationship('Todo', back_populates='detail')
-    
-Todo.details = relationship('Details', secondary=todo_details_association, back_populates='todos')
