@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 from fastapi import APIRouter, status, HTTPException
+from sqlalchemy.orm import joinedload
 
 from api.models import Todo
 from api.deps import db_dependency, user_dependency
@@ -21,12 +22,12 @@ class TodoCreate(TodoBase):
 @router.get('/{todo_id}')
 def get_todo(db: db_dependency, user: user_dependency, todo_id: int):
     # Get the first id in Todo that matches
-    return db.query(Todo).filter(Todo.id == todo_id ).first()
+    return db.query(Todo).filter(Todo.id == todo_id ).options(joinedload(Todo.detail)).first()
 
 # Get all todos
 @router.get('/')
 def get_todos(db: db_dependency, user: user_dependency):
-    return db.query(Todo).all()
+    return db.query(Todo).options(joinedload(Todo.detail)).all()
 
 # Create a new todo
 @router.post('/', status_code=status.HTTP_201_CREATED)

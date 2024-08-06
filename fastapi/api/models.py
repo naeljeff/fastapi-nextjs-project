@@ -2,13 +2,6 @@ from sqlalchemy import Column, Integer, String, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from .database import Base
 
-# Create association tables (table tengah yang ngegabungin 2 tabel lainnya)
-# todo_details_association = Table(
-#     'todo_details', Base.metadata,
-#     Column('todo_details_id', Integer, ForeignKey('details.id')),
-#     Column('todo_master_id', Integer, ForeignKey('todo.id'))
-# )
-
 # Class User -> For table user
 class User(Base):
     __tablename__ = 'users'

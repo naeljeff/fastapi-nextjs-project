@@ -19,8 +19,8 @@ class DetailCreate(DetailBase):
 @router.get('/')
 def get_detail(
     todo_id: int,
-    db: Session = Depends(db_dependency),
-    user: dict = Depends(user_dependency)
+    db: db_dependency,
+    user: user_dependency
 ):
     detail_instance = db.query(Details).filter(Details.todo_id == todo_id).first()
 
@@ -32,8 +32,8 @@ def get_detail(
 def create_detail(
     todo_id: int, 
     detail: DetailCreate, 
-    db: Session = Depends(db_dependency), 
-    user: dict = Depends(user_dependency)
+    db: db_dependency, 
+    user: user_dependency
 ):
     todo = db.query(Todo).filter(Todo.id == todo_id).first()
 
@@ -51,8 +51,8 @@ def create_detail(
 @router.delete('/')
 def delete_detail(
     todo_id: int, 
-    db: Session = Depends(db_dependency), 
-    user: dict = Depends(user_dependency)
+    db: db_dependency,
+    user: user_dependency
 ):
     detail = db.query(Details).filter(Details.todo_id == todo_id).first()
 
