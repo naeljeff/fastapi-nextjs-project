@@ -47,6 +47,7 @@ def create_todo(db: db_dependency, user: user_dependency, todo: TodoCreate):
     return db_todo
 
 
+# Delete todos
 @router.delete('/{todo_id}')
 def delete_todo(db: db_dependency, user: user_dependency, todo_id: int):
     db_todo = db.query(Todo).filter(Todo.id == todo_id).first()
@@ -55,3 +56,25 @@ def delete_todo(db: db_dependency, user: user_dependency, todo_id: int):
         db.delete(db_todo)
         db.commit()
     return db_todo
+
+# Update todos
+@router.patch('/{todo_id}')
+def update_todo(db: db_dependency, user: user_dependency, todo_id: int, updated_todo: TodoBase):
+    existing_todo = db.query(Todo).filter(Todo.id == todo_id).first()
+    
+    if not existing_todo:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Todo not found')
+    
+    # Get user id
+    user_id = user.get('userId')
+    # print(f"User: {user_id}")
+    if existing_todo.user_id != user_id:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='You are not authorized to access this todo')
+    
+    existing_todo.title = updated_todo.title
+    existing_todo.description = updated_todo.description
+    
+    db.commit()
+    db.refresh(existing_todo)
+    
+    return existing_todo
